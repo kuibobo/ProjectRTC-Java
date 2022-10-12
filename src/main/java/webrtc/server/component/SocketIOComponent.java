@@ -98,15 +98,19 @@ public class SocketIOComponent {
     public void onReadyToStream(SocketIOClient client, AckRequest request, Map<String, String> msg) {
         log.info("readyToStream");
 
+        String name = msg.get("name");
         String cacheKey = "clients";
         List<Map<String, String>> clients = (List) cache.get(cacheKey);
 
         if (clients == null) {
             clients = new ArrayList();
         }
+        clients = clients.
+            stream().filter(item -> !item.get("name").equals(name))
+                .collect(Collectors.toList());
         clients.add(new HashMap<String, String>() {{
             put("id", client.getSessionId().toString());
-            put("name", msg.get("name"));
+            put("name", name);
         }});
 
         cache.add(cacheKey, clients);
