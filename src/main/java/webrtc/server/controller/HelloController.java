@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import webrtc.server.cache.GuavaCache;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class HelloController {
@@ -22,9 +24,11 @@ public class HelloController {
 
     @GetMapping("/clients")
     @ResponseBody
-    public List clients() {
+    public Map clients() {
         List clients = (List) cache.get("clients");
-
-        return clients;
+        Map<String, List> map = new HashMap() {{
+            put("data", clients);
+        }};
+        return map;
     }
 }
